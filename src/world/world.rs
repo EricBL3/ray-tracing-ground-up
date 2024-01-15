@@ -19,8 +19,8 @@ pub struct World {
 
 impl World {
     pub fn new(background_color: RGBColor) -> Self {
-        let view_plane = ViewPlane::new(0, 0);
-        let sphere = Sphere::new(Point3::new(0.0, 0.0, 0.0), 0.0);
+        let view_plane = ViewPlane::default();
+        let sphere = Sphere::default();
 
         Self {
             view_plane,

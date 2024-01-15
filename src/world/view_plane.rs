@@ -8,18 +8,20 @@ pub struct ViewPlane {
     pub show_out_of_gamut: bool,
 }
 
-impl ViewPlane {
-    pub fn new(h_res: u32, v_res: u32) -> Self {
+impl Default for ViewPlane {
+    fn default() -> Self {
         Self {
-            horizontal_res: h_res,
-            vertical_res: v_res,
+            horizontal_res: 0,
+            vertical_res: 0,
             pixel_size: 1.0,
             gamma: 1.0,
             inv_gamma: 1.0,
             show_out_of_gamut: false,
         }
     }
+}
 
+impl ViewPlane {
     pub fn set_hres(&mut self, h_res: u32) {
         self.horizontal_res = h_res;
     }

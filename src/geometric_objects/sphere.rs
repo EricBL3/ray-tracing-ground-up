@@ -24,10 +24,6 @@ impl Sphere {
         }
     }
 
-    pub fn set_color(&mut self, r: f32, g: f32, b: f32) {
-        self.color = RGBColor::new(r, g, b);
-    }
-
     pub fn set_center(&mut self, x: f64, y: f64, z: f64) {
         self.center.x = x;
         self.center.y = y;
@@ -72,6 +68,10 @@ impl GeometricObject for Sphere {
         }
 
         false
+    }
+
+    fn set_color(&mut self, r: f32, g: f32, b: f32) {
+        self.color = RGBColor::new(r, g, b);
     }
 
     fn get_color(&self) -> RGBColor {
