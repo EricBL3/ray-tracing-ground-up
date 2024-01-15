@@ -9,3 +9,4 @@ repository = "https://github.com/EricBL3/ray-tracing-ground-up"
 
 [dependencies]
 sdl2 = '0.36'
+nalgebra = '*'

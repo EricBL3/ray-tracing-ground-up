@@ -1,11 +1,10 @@
 mod constants;
 mod ray_tracer_window;
-
-extern crate sdl2;
-
-use std::time::Duration;
+mod utilities;
+mod world;
 
 use ray_tracer_window::RayTracerWindow;
+use std::time::Duration;
 
 pub fn main() {
     let mut window = RayTracerWindow::new(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT);
