@@ -10,8 +10,6 @@ use constants::BLACK;
 use geometric_objects::Sphere;
 use nalgebra::Point3;
 use ray_tracer_window::RayTracerWindow;
-use std::time::Duration;
-use tracers::SingleSphere;
 use world::{ViewPlane, World};
 
 pub fn main() {

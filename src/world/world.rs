@@ -5,7 +5,6 @@ use crate::tracers::*;
 use crate::utilities::*;
 use nalgebra::{Point3, Vector3};
 
-#[derive(Default)]
 pub struct World {
     pub view_plane: ViewPlane,
     pub background_color: RGBColor,
@@ -16,22 +15,22 @@ pub struct World {
 
 impl World {
     pub fn new(
-        vp: ViewPlane,
+        view_plane: ViewPlane,
         background_color: RGBColor,
         sphere: Sphere,
         window: RayTracerWindow,
     ) -> Self {
         Self {
-            view_plane: vp,
-            background_color: background_color,
-            sphere: sphere,
-            window: window,
+            view_plane,
+            background_color,
+            sphere,
+            window,
             tracer: None,
         }
     }
 
     pub fn set_tracer(&mut self, tracer: Box<dyn Tracer>) {
-        self.tracer = Some(tracer)
+        self.tracer = Some(tracer);
     }
 
     pub fn render_scene(&mut self) {
@@ -54,10 +53,8 @@ impl World {
                     zw,
                 );
 
-                if let Some(tracer_ptr) = &self.tracer {
-                    let pixel_color = tracer_ptr.trace_ray(&ray);
-                    self.display_pixel(r, c, &pixel_color);
-                }
+                let pixel_color = self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
+                self.display_pixel(r, c, &pixel_color);
 
                 if window.should_close() {
                     quit = true;

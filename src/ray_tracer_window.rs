@@ -7,39 +7,9 @@ use sdl2::render::*;
 use sdl2::video::*;
 use sdl2::Sdl;
 
-use crate::constants::SCREEN_HEIGHT;
-use crate::constants::SCREEN_WIDTH;
-
 pub struct RayTracerWindow {
     canvas: Canvas<Window>,
     sdl_context: Sdl,
-}
-
-impl Default for RayTracerWindow {
-    fn default() -> Self {
-        let sdl_context = sdl2::init().unwrap();
-        let video_subsystem = sdl_context.video().unwrap();
-
-        let window = video_subsystem
-            .window(
-                "Ray Tracing from the Ground Up",
-                SCREEN_WIDTH,
-                SCREEN_HEIGHT,
-            )
-            .position_centered()
-            .build()
-            .unwrap();
-
-        let mut canvas = window.into_canvas().build().unwrap();
-
-        canvas.set_draw_color(Color::BLACK);
-        canvas.clear();
-
-        Self {
-            sdl_context: sdl_context,
-            canvas: canvas,
-        }
-    }
 }
 
 impl RayTracerWindow {

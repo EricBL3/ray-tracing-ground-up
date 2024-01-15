@@ -1,4 +1,4 @@
-#[derive(Default, Clone)]
+#[derive(Clone)]
 pub struct ViewPlane {
     pub horizontal_res: u32,
     pub vertical_res: u32,

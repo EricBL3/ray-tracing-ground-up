@@ -1,7 +1,7 @@
-use crate::{constants::*, utilities::*};
+use crate::{constants::*, utilities::*, world::World};
 
 pub trait Tracer {
-    fn trace_ray(&self, _ray: &Ray) -> RGBColor {
+    fn trace_ray(&self, _world: &World, _ray: &Ray) -> RGBColor {
         return BLACK;
     }
 
