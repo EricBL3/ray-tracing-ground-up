@@ -1,5 +1,4 @@
 use core::f64;
-
 use nalgebra::Point3;
 
 use crate::{
@@ -27,10 +26,6 @@ impl Sphere {
 
     pub fn set_color(&mut self, r: f32, g: f32, b: f32) {
         self.color = RGBColor::new(r, g, b);
-    }
-
-    pub fn get_color(&self) -> &RGBColor {
-        return &self.color;
     }
 
     pub fn set_center(&mut self, x: f64, y: f64, z: f64) {
@@ -77,5 +72,9 @@ impl GeometricObject for Sphere {
         }
 
         false
+    }
+
+    fn get_color(&self) -> RGBColor {
+        self.color
     }
 }

@@ -3,3 +3,6 @@ pub use tracer::*;
 
 mod single_sphere;
 pub use single_sphere::*;
+
+mod multiple_objects;
+pub use multiple_objects::*;

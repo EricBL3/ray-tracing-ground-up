@@ -9,21 +9,14 @@ pub struct ViewPlane {
 }
 
 impl ViewPlane {
-    pub fn new(
-        h_res: u32,
-        v_res: u32,
-        p_size: f64,
-        gamma: f32,
-        inv_gamma: f32,
-        show_out_of_gamut: bool,
-    ) -> Self {
+    pub fn new(h_res: u32, v_res: u32) -> Self {
         Self {
             horizontal_res: h_res,
             vertical_res: v_res,
-            pixel_size: p_size,
-            gamma: gamma,
-            inv_gamma: inv_gamma,
-            show_out_of_gamut: show_out_of_gamut,
+            pixel_size: 1.0,
+            gamma: 1.0,
+            inv_gamma: 1.0,
+            show_out_of_gamut: false,
         }
     }
 

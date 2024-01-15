@@ -1,5 +1,8 @@
 use super::ViewPlane;
+use crate::build::Builder;
+use crate::constants::*;
 use crate::geometric_objects::Sphere;
+use crate::geometric_objects::*;
 use crate::ray_tracer_window::RayTracerWindow;
 use crate::tracers::*;
 use crate::utilities::*;
@@ -11,11 +14,12 @@ pub struct World {
     pub sphere: Sphere,
     pub window: Option<RayTracerWindow>,
     pub tracer: Option<Box<dyn Tracer>>,
+    pub objects: Vec<Box<dyn GeometricObject>>,
 }
 
 impl World {
     pub fn new(background_color: RGBColor) -> Self {
-        let view_plane = ViewPlane::new(0, 0, 0.0, 0.0, 0.0, false);
+        let view_plane = ViewPlane::new(0, 0);
         let sphere = Sphere::new(Point3::new(0.0, 0.0, 0.0), 0.0);
 
         Self {
@@ -24,11 +28,16 @@ impl World {
             sphere,
             window: None,
             tracer: None,
+            objects: Vec::new(),
         }
     }
 
     pub fn set_tracer(&mut self, tracer: Box<dyn Tracer>) {
         self.tracer = Some(tracer);
+    }
+
+    pub fn build<T: Builder>(&mut self, builder: T) {
+        builder.build(self);
     }
 
     pub fn render_scene(&mut self) {
@@ -43,6 +52,7 @@ impl World {
         let ray_dir = Vector3::new(0.0, 0.0, -1.0);
         let mut ray = Ray::new(ray_origin, ray_dir);
         let mut quit = false;
+        println!("Rendering scene...");
         for r in 0..v_res {
             for c in 0..h_res {
                 ray.origin = Point3::new(
@@ -63,7 +73,7 @@ impl World {
                 }
             }
         }
-
+        println!("Done!");
         //wait
         while !quit && !self.window.as_ref().unwrap().should_close() {}
     }
@@ -112,5 +122,26 @@ impl World {
         }
 
         c
+    }
+
+    pub fn add_object(&mut self, object: Box<dyn GeometricObject>) {
+        self.objects.push(object);
+    }
+
+    pub fn hit_bare_bones_objects(&self, ray: &Ray) -> ShadeRec {
+        let mut sr = ShadeRec::new();
+        let mut t = 0.0;
+        let mut t_min = K_HUGE_VALUE;
+        let num_objects = self.objects.len();
+
+        for j in 0..num_objects {
+            if self.objects[j].hit(ray, &mut t, &mut sr) && t < t_min {
+                sr.hit_an_object = true;
+                t_min = t;
+                sr.color = self.objects[j].get_color();
+            }
+        }
+
+        sr
     }
 }
