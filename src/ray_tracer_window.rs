@@ -8,7 +8,7 @@ use sdl2::video::*;
 use sdl2::Sdl;
 
 pub struct RayTracerWindow {
-    canvas: Canvas<Window>,
+    pub canvas: Canvas<Window>,
     sdl_context: Sdl,
 }
 

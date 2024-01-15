@@ -1,6 +1,6 @@
-use super::super::RayTracerWindow;
 use super::ViewPlane;
 use crate::geometric_objects::Sphere;
+use crate::ray_tracer_window::RayTracerWindow;
 use crate::tracers::*;
 use crate::utilities::*;
 use nalgebra::{Point3, Vector3};
@@ -9,22 +9,20 @@ pub struct World {
     pub view_plane: ViewPlane,
     pub background_color: RGBColor,
     pub sphere: Sphere,
-    pub window: RayTracerWindow,
+    pub window: Option<RayTracerWindow>,
     pub tracer: Option<Box<dyn Tracer>>,
 }
 
 impl World {
-    pub fn new(
-        view_plane: ViewPlane,
-        background_color: RGBColor,
-        sphere: Sphere,
-        window: RayTracerWindow,
-    ) -> Self {
+    pub fn new(background_color: RGBColor) -> Self {
+        let view_plane = ViewPlane::new(0, 0, 0.0, 0.0, 0.0, false);
+        let sphere = Sphere::new(Point3::new(0.0, 0.0, 0.0), 0.0);
+
         Self {
             view_plane,
             background_color,
             sphere,
-            window,
+            window: None,
             tracer: None,
         }
     }
@@ -39,7 +37,7 @@ impl World {
         let s = self.view_plane.pixel_size;
         let zw = 100.0;
 
-        let window = RayTracerWindow::new(h_res, v_res);
+        self.window = Some(RayTracerWindow::new(h_res, v_res));
 
         let ray_origin = Point3::new(0.0, 0.0, 0.0);
         let ray_dir = Vector3::new(0.0, 0.0, -1.0);
@@ -56,7 +54,7 @@ impl World {
                 let pixel_color = self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
                 self.display_pixel(r, c, &pixel_color);
 
-                if window.should_close() {
+                if self.window.as_ref().unwrap().should_close() {
                     quit = true;
                 }
 
@@ -67,7 +65,7 @@ impl World {
         }
 
         //wait
-        while !quit && !window.should_close() {}
+        while !quit && !self.window.as_ref().unwrap().should_close() {}
     }
 
     pub fn display_pixel(&mut self, row: u32, col: u32, raw_color: &RGBColor) {
@@ -85,7 +83,7 @@ impl World {
         let x = col;
         let y = self.view_plane.vertical_res - row - 1;
 
-        self.window.set_pixel(
+        self.window.as_mut().unwrap().set_pixel(
             x as i32,
             y as i32,
             (mapped_color.r * 255.0) as u8,
