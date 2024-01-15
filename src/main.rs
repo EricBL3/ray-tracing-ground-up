@@ -1,6 +1,7 @@
 mod constants;
 mod geometric_objects;
 mod ray_tracer_window;
+mod tracers;
 mod utilities;
 mod world;
 
