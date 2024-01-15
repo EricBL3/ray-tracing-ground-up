@@ -1,28 +1,34 @@
-use sdl2::pixels::Color;
+use std::{cell::RefCell, rc::Rc};
 
-use crate::{geometric_objects::GeometricObject, utilities::ShadeRec, world::World};
+use crate::{
+    constants::*,
+    geometric_objects::GeometricObject,
+    utilities::{RGBColor, ShadeRec},
+    world::World,
+};
 
 use super::Tracer;
 
 pub struct SingleSphere {
-    world: World,
+    world: Rc<RefCell<World>>,
 }
 
 impl SingleSphere {
-    pub fn new(&self, world: World) -> Self {
+    pub fn new(world: Rc<RefCell<World>>) -> Self {
         Self { world: world }
     }
 }
 
 impl Tracer for SingleSphere {
-    fn trace_ray(&self, _ray: &crate::utilities::Ray) -> Color {
-        let mut sr = ShadeRec::new(&self.world);
+    fn trace_ray(&self, _ray: &crate::utilities::Ray) -> RGBColor {
+        let world = self.world.borrow();
+        let mut sr = ShadeRec::new(&world);
         let mut t = 0.0;
 
-        if self.world.sphere.hit(_ray, &mut t, &mut sr) {
-            return Color::RED;
+        if world.sphere.hit(_ray, &mut t, &mut sr) {
+            return RED;
         } else {
-            return Color::BLACK;
+            return BLACK;
         }
     }
 }

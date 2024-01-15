@@ -1,13 +1,11 @@
-use sdl2::pixels::Color;
-
-use crate::utilities::Ray;
+use crate::{constants::*, utilities::*};
 
 pub trait Tracer {
-    fn trace_ray(&self, _ray: &Ray) -> Color {
-        return Color::BLACK;
+    fn trace_ray(&self, _ray: &Ray) -> RGBColor {
+        return BLACK;
     }
 
-    fn trace_ray_with_depth(&self, _ray: &Ray, _depth: i32) -> Color {
-        return Color::BLACK;
+    fn trace_ray_with_depth(&self, _ray: &Ray, _depth: i32) -> RGBColor {
+        return BLACK;
     }
 }

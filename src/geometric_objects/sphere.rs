@@ -1,37 +1,36 @@
 use core::f64;
 
-use nalgebra::{Point3, Vector3};
-use sdl2::pixels::Color;
+use nalgebra::Point3;
 
 use crate::{
-    constants::K_EPSILON,
-    utilities::{Ray, ShadeRec},
+    constants::{BLACK, K_EPSILON},
+    utilities::{RGBColor, Ray, ShadeRec},
 };
 
 use super::GeometricObject;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct Sphere {
     center: Point3<f64>,
     radius: f64,
-    color: Color,
+    color: RGBColor,
 }
 
 impl Sphere {
-    pub fn new(&self, c: Point3<f64>, r: f64) -> Self {
+    pub fn new(c: Point3<f64>, r: f64) -> Self {
         Self {
             center: c,
             radius: r,
-            color: Color::BLACK,
+            color: BLACK,
         }
     }
 
-    pub fn set_color(&mut self, r: u8, g: u8, b: u8) {
-        self.color = Color::RGB(r, g, b);
+    pub fn set_color(&mut self, r: f32, g: f32, b: f32) {
+        self.color = RGBColor::new(r, g, b);
     }
 
-    pub fn get_color(&self) -> Color {
-        return self.color;
+    pub fn get_color(&self) -> &RGBColor {
+        return &self.color;
     }
 
     pub fn set_center(&mut self, x: f64, y: f64, z: f64) {
