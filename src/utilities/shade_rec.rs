@@ -7,11 +7,11 @@ use crate::world::*;
 
 #[derive(Clone)]
 pub struct ShadeRec {
-    hit_an_object: bool,
-    local_hit_point: Point3<f64>,
-    normal: Vector3<f64>,
-    color: Color,
-    world: World,
+    pub hit_an_object: bool,
+    pub local_hit_point: Point3<f64>,
+    pub normal: Vector3<f64>,
+    pub color: Color,
+    pub world: World,
 }
 
 impl ShadeRec {
