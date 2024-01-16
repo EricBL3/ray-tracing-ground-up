@@ -9,7 +9,7 @@ pub struct Build2SpheresAndPlane;
 impl Builder for Build2SpheresAndPlane {
     fn build(&self, world: &mut World) {
         world.view_plane.set_hres(200);
-        world.view_plane.set_vres(300);
+        world.view_plane.set_vres(200);
 
         world.background_color = BLACK;
 

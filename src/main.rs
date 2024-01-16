@@ -14,7 +14,7 @@ use crate::build::*;
 pub fn main() {
     let mut w = World::new(BLACK);
     println!("Building world...");
-    w.build(Build2SpheresAndPlane);
+    w.build(BuildChapter3Cover);
     if w.tracer.is_none() {
         println!("ERROR: The tracer was not specified in the build function");
     } else {

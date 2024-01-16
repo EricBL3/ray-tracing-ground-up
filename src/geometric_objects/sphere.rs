@@ -74,6 +74,10 @@ impl GeometricObject for Sphere {
         self.color = RGBColor::new(r, g, b);
     }
 
+    fn set_color_from_rgb_color(&mut self, color: RGBColor) {
+        self.color = color;
+    }
+
     fn get_color(&self) -> RGBColor {
         self.color
     }
