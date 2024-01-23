@@ -6,6 +6,7 @@ use crate::geometric_objects::*;
 use crate::ray_tracer_window::RayTracerWindow;
 use crate::tracers::*;
 use crate::utilities::*;
+use nalgebra::Point2;
 use nalgebra::{Point3, Vector3};
 
 pub struct World {
@@ -45,6 +46,8 @@ impl World {
         let v_res = self.view_plane.vertical_res;
         let s = self.view_plane.pixel_size;
         let zw = 100.0;
+        let n = self.view_plane.num_samples;
+        let mut sample_point = Point2::new(0.0, 0.0);
 
         self.window = Some(RayTracerWindow::new(h_res, v_res));
 
@@ -53,15 +56,30 @@ impl World {
         let mut ray = Ray::new(ray_origin, ray_dir);
         let mut quit = false;
         println!("Rendering scene...");
+        // up
         for r in 0..v_res {
+            // accross
             for c in 0..h_res {
-                ray.origin = Point3::new(
-                    s * (c as f64 - h_res as f64 / 2.0 + 0.5),
-                    s * (r as f64 - v_res as f64 / 2.0 + 0.5),
-                    zw,
-                );
+                let mut pixel_color = BLACK;
 
-                let pixel_color = self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
+                // up pixel
+                for p in 0..n {
+                    // across pixel
+                    for q in 0..n {
+                        sample_point.x = s
+                            * (c as f64 - 0.5 * self.view_plane.horizontal_res as f64
+                                + (q as f64 + 0.5) / n as f64);
+
+                        sample_point.y = s
+                            * (r as f64 - 0.5 * self.view_plane.vertical_res as f64
+                                + (p as f64 + 0.5) / n as f64);
+
+                        ray.origin = Point3::new(sample_point.x, sample_point.y, zw);
+                        pixel_color += self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
+                    }
+                }
+
+                pixel_color /= self.view_plane.num_samples as f32; // avg the colors
                 self.display_pixel(r, c, &pixel_color);
 
                 if self.window.as_ref().unwrap().should_close() {

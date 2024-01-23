@@ -6,6 +6,7 @@ pub struct ViewPlane {
     pub gamma: f32,
     pub inv_gamma: f32,
     pub show_out_of_gamut: bool,
+    pub num_samples: u32,
 }
 
 impl Default for ViewPlane {
@@ -17,6 +18,7 @@ impl Default for ViewPlane {
             gamma: 1.0,
             inv_gamma: 1.0,
             show_out_of_gamut: false,
+            num_samples: 1,
         }
     }
 }
@@ -41,5 +43,9 @@ impl ViewPlane {
 
     pub fn set_gamut_display(&mut self, show: bool) {
         self.show_out_of_gamut = show;
+    }
+
+    pub fn set_num_samples(&mut self, num_samples: u32) {
+        self.num_samples = num_samples;
     }
 }
