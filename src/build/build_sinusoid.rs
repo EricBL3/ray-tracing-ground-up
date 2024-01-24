@@ -9,7 +9,7 @@ impl Builder for BuildSinusoid {
         world.view_plane.set_hres(512);
         world.view_plane.set_vres(512);
         world.view_plane.set_pixel_size(0.02);
-        world.view_plane.set_num_samples(25);
+        world.view_plane.set_num_samples(16);
 
         world.background_color = BLACK;
 
