@@ -51,6 +51,7 @@ impl World {
         let v_res = self.view_plane.vertical_res;
         let s = self.view_plane.pixel_size;
         let zw = 100.0;
+        let n = (self.view_plane.num_samples as f32).sqrt() as u32;
         let mut sample_point = Point2::new(0.0, 0.0);
 
         self.window = Some(RayTracerWindow::new(h_res, v_res));
@@ -67,19 +68,20 @@ impl World {
                 let mut pixel_color = BLACK;
 
                 // up pixel
-                for p in 0..self.view_plane.num_samples {
+                for p in 0..n {
+                    // across pixel
+                    for q in 0..n {
+                        sample_point.x = s
+                            * (c as f64 - 0.5 * self.view_plane.horizontal_res as f64
+                                + (q as f64 + self.rng_thread.gen::<f64>()) / n as f64);
 
-                    sample_point.x = s
-                        * (c as f64 - 0.5 * self.view_plane.horizontal_res as f64
-                            + self.rng_thread.gen::<f64>());
+                        sample_point.y = s
+                            * (r as f64 - 0.5 * self.view_plane.vertical_res as f64
+                                + (p as f64 + self.rng_thread.gen::<f64>()) / n as f64);
 
-                    sample_point.y = s
-                        * (r as f64 - 0.5 * self.view_plane.vertical_res as f64
-                            + self.rng_thread.gen::<f64>());
-
-                    ray.origin = Point3::new(sample_point.x, sample_point.y, zw);
-                    pixel_color += self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
-
+                        ray.origin = Point3::new(sample_point.x, sample_point.y, zw);
+                        pixel_color += self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
+                    }
                 }
 
                 pixel_color /= self.view_plane.num_samples as f32; // avg the colors

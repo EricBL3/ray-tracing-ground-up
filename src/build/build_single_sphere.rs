@@ -11,7 +11,7 @@ impl Builder for BuildSingleSphere {
         world.view_plane.set_pixel_size(1.0);
         world.view_plane.set_gamma(1.0);
         world.view_plane.set_gamut_display(false);
-        world.view_plane.set_num_samples(16);
+        world.view_plane.set_num_samples(9);
 
         world.background_color = WHITE;
 
