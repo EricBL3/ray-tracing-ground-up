@@ -46,7 +46,7 @@ impl World {
         let v_res = self.view_plane.vertical_res;
         let s = self.view_plane.pixel_size;
         let zw = 100.0;
-        let n = self.view_plane.num_samples;
+        let n = (self.view_plane.num_samples as f32).sqrt() as u32;
         let mut sample_point = Point2::new(0.0, 0.0);
 
         self.window = Some(RayTracerWindow::new(h_res, v_res));
