@@ -8,6 +8,8 @@ use crate::tracers::*;
 use crate::utilities::*;
 use nalgebra::Point2;
 use nalgebra::{Point3, Vector3};
+use rand::rngs::ThreadRng;
+use rand::Rng;
 
 pub struct World {
     pub view_plane: ViewPlane,
@@ -16,6 +18,7 @@ pub struct World {
     pub window: Option<RayTracerWindow>,
     pub tracer: Option<Box<dyn Tracer>>,
     pub objects: Vec<Box<dyn GeometricObject>>,
+    pub rng_thread: ThreadRng,
     pub eye: Point3<f64>,
     pub view_plane_distance: f64,
 }
@@ -24,6 +27,7 @@ impl World {
     pub fn new(background_color: RGBColor) -> Self {
         let view_plane = ViewPlane::default();
         let sphere = Sphere::default();
+        let mut rng = rand::thread_rng();
 
         Self {
             view_plane,
@@ -32,6 +36,7 @@ impl World {
             window: None,
             tracer: None,
             objects: Vec::new(),
+            rng_thread: rng,
             eye: Point3::new(0.0, 0.0, 0.0),
             view_plane_distance: 100.0,
         }
@@ -72,11 +77,11 @@ impl World {
                     for q in 0..n {
                         sample_point.x = s
                             * (c as f64 - 0.5 * self.view_plane.horizontal_res as f64
-                                + (q as f64 + 0.5) / n as f64);
+                                + (q as f64 + self.rng_thread.gen::<f64>()) / n as f64);
 
                         sample_point.y = s
                             * (r as f64 - 0.5 * self.view_plane.vertical_res as f64
-                                + (p as f64 + 0.5) / n as f64);
+                                + (p as f64 + self.rng_thread.gen::<f64>()) / n as f64);
 
                         ray.origin = Point3::new(sample_point.x, sample_point.y, zw);
                         pixel_color += self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
