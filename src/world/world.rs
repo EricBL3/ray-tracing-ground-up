@@ -16,6 +16,8 @@ pub struct World {
     pub window: Option<RayTracerWindow>,
     pub tracer: Option<Box<dyn Tracer>>,
     pub objects: Vec<Box<dyn GeometricObject>>,
+    pub eye: Point3<f64>,
+    pub view_plane_distance: f64,
 }
 
 impl World {
@@ -30,6 +32,8 @@ impl World {
             window: None,
             tracer: None,
             objects: Vec::new(),
+            eye: Point3::new(0.0, 0.0, 0.0),
+            view_plane_distance: 100.0,
         }
     }
 
@@ -80,6 +84,47 @@ impl World {
                 }
 
                 pixel_color /= self.view_plane.num_samples as f32; // avg the colors
+                self.display_pixel(r, c, &pixel_color);
+
+                if self.window.as_ref().unwrap().should_close() {
+                    quit = true;
+                }
+
+                if quit {
+                    break;
+                }
+            }
+        }
+        println!("Done!");
+        //wait
+        while !quit && !self.window.as_ref().unwrap().should_close() {}
+    }
+
+    pub fn render_perspective(&mut self) {
+        let h_res: u32 = self.view_plane.horizontal_res;
+        let v_res = self.view_plane.vertical_res;
+        let s = self.view_plane.pixel_size;
+
+        self.window = Some(RayTracerWindow::new(h_res, v_res));
+
+        let ray_origin = self.eye;
+        let ray_dir = Vector3::new(0.0, 0.0, -1.0);
+        let mut ray = Ray::new(ray_origin, ray_dir);
+        let mut quit = false;
+        let mut pixel_color;
+        println!("Rendering scene...");
+        // up
+        for r in 0..v_res {
+            // accross
+            for c in 0..h_res {
+                ray.direction = Vector3::new(
+                    s * (c as f64 - 0.5 * (h_res - 1) as f64),
+                    s * (r as f64 - 0.5 * (v_res - 1) as f64),
+                    -self.view_plane_distance,
+                );
+
+                ray.direction.normalize_mut();
+                pixel_color = self.tracer.as_ref().unwrap().trace_ray(&self, &ray);
                 self.display_pixel(r, c, &pixel_color);
 
                 if self.window.as_ref().unwrap().should_close() {

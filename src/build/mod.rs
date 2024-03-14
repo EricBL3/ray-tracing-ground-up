@@ -12,3 +12,6 @@ pub use build_chapter_3_cover::*;
 
 mod build_sinusoid;
 pub use build_sinusoid::*;
+
+mod perspective_view;
+pub use perspective_view::*;
